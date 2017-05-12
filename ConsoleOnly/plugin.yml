@@ -1,0 +1,10 @@
+main: me.spaicygaming.consoleonly.CmdsBlocker
+author: SpaicyGaming
+name: ConsoleOnly
+version: 1.0
+website: http://bit.ly/ConsoleOnly
+
+commands:
+  consoleonly:
+    description: Show subcommands.
+    aliases: co

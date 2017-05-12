@@ -1,0 +1,45 @@
+##################################
+#       ConsoleOnly plugin       #
+#               by               #
+#          SpaicyGaming          #
+##################################
+
+Prefix: '&8[&3ConsoleOnly&8]'
+
+Settings:
+  ConsoleOnly:
+    Active: true
+    Message: '&cThis command can only be run by the console.'
+    Commands:
+      - op
+      - deop
+      - plugins
+      - pl
+      - reload
+      - ver
+      - version
+      - minecraft:op
+      - minecraft:deop
+      - bukkit:pl
+      - bukkit:plugins
+      - bukkit:ver
+      - bukkit:version
+
+  BlockedCommands:    
+    Active: true
+    Message: '&cSorry, you don''t have the permission ''consoleonly.bypass''.'
+    Commands:
+      - help
+      - minecraft:help
+      - bukkit:help
+      - me
+      - minecraft:me
+  
+#Messages for /co info,reload:
+Messages:
+  NoPermissions: '&cYou don''t have enough permissions to perform this command.'
+  WrongCommand: '&cThis command does not exist. Please use /co.'
+  TooManyArgs: '&cToo many args.'
+
+####DO NOT TOUCH###
+ConfigVersion: 1.0 
