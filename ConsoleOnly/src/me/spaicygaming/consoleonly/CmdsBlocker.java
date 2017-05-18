@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -18,7 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class CmdsBlocker extends JavaPlugin implements Listener{
 
-	String ver = "1.0";
+	String ver = "1.1";
 	String projectlink = "http://bit.ly/ConsoleOnly";
 	String prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Prefix")) + ChatColor.RESET + " ";
 	
@@ -35,7 +36,7 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 		getLogger().info("ConsoleOnly v" + ver + " has been enabled!");
 		
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
-		if (!getConfig().getString("ConfigVersion").equals("1.0")) {
+		if (!getConfig().getString("ConfigVersion").equals("1.1")) {
 	        console.sendMessage("[ConsoleOnly] " + ChatColor.RED + "OUTDATED CONFIG FILE DETECTED, PLEASE DELETE THE OLD ONE!");
 	    }
 		saveDefaultConfig();
@@ -51,11 +52,20 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 	  Configuration config = getConfig();
 	  
 	  	if (config.getBoolean("Settings.ConsoleOnly.Active")){
-	  		List<String> consolenoly = config.getStringList("Settings.ConsoleOnly.Commands");
-	  		for (String command : consolenoly) {
-	  			if (e.getMessage().toLowerCase().startsWith("/" + command)) {
+	  		List<String> consoleonly = config.getStringList("Settings.ConsoleOnly.Commands");
+	  		for (String command : consoleonly) {
+	  			if ((e.getMessage().toLowerCase().startsWith("/" + command))) {
 	  				e.setCancelled(true);
 	  				p.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', config.getString("Settings.ConsoleOnly.Message")));
+	  				
+	  				if (getConfig().getBoolean("Settings.ConsoleOnly.Effects.sounds.active")){
+	  					String sound = getConfig().getString("Settings.ConsoleOnly.Effects.sounds.type");
+	  					try {
+	  						p.getWorld().playSound(p.getLocation(), Sound.valueOf(sound), 0.6F, 0.6F);
+	  					} catch (Exception ex){
+	  						getServer().getConsoleSender().sendMessage("[ConsoleOnly] " + ChatColor.RED + "ConsoleOnly | entered sound does not exist.");
+	  					}
+	  				}
 	  			}
 	  		}
 	  	}
@@ -66,7 +76,16 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 	  			if (!p.hasPermission("consoleonly.bypass")) {
 	  				if (e.getMessage().toLowerCase().startsWith("/" + command)){
 	  					e.setCancelled(true);
-	  					p.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', config.getString("Settings.BlockedCommands.Message"))); 
+	  					p.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', config.getString("Settings.BlockedCommands.Message")));
+	  					
+	  					if (getConfig().getBoolean("Settings.BlockedCommands.Effects.sounds.active")){
+	  						String sound = getConfig().getString("Settings.BlockedCommands.Effects.sounds.type");
+	  						try{
+	  							p.getWorld().playSound(p.getLocation(), Sound.valueOf(sound), 0.6F, 0.6F);
+	  						}catch (Exception ex){
+	  							getServer().getConsoleSender().sendMessage("[ConsoleOnly] " + ChatColor.RED + "BlockedCommands | Entered sound does not exist.");
+	  						}
+		  				}
 	  				}			  
 	  			}
 	  		}
@@ -78,8 +97,8 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 			if (args.length == 0){
 				sender.sendMessage("");
 				sender.sendMessage(ChatColor.RED + "   --=-=" + ChatColor.GOLD  + " ConsoleOnly " + ChatColor.GRAY + ver + ChatColor.RED + " =-=--");
-				sender.sendMessage(ChatColor.AQUA + "   /co info " + ChatColor.GREEN + "->" + ChatColor.GRAY + " Show Info");
-				sender.sendMessage(ChatColor.AQUA + "   /co reload " + ChatColor.GREEN + "->" + ChatColor.GRAY + " Reload the Config");
+				sender.sendMessage(ChatColor.AQUA + "   /co info " + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows Info");
+				sender.sendMessage(ChatColor.AQUA + "   /co reload " + ChatColor.GREEN + "->" + ChatColor.GRAY + " Reloads the Config");
 				sender.sendMessage(ChatColor.RED + "         --=-=-=-=-=-=--");
 				sender.sendMessage("");
 			}
@@ -89,8 +108,8 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 					if (sender instanceof Player){
 						if (sender.hasPermission("consoleonly.reload")){
 							reloadConfig();
-							sender.sendMessage(prefix + "ง7Config Reloaded");
-							getLogger().info("Config Reloaded");
+							sender.sendMessage(prefix + "ยง7Config Reloaded.");
+							getLogger().info("Config Reloaded.");
 						}
 						else {
 							sender.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', getConfig().getString("Messages.NoPermissions")));
@@ -98,7 +117,7 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 					}
 					else {
 						reloadConfig();
-						getLogger().info("Config Reloaded");
+						getLogger().info("Config Reloaded.");
 					}
 				}
 				else if (args[0].equalsIgnoreCase("info")) {
@@ -128,7 +147,6 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 			}
 		}
 		return false;
-	}
-		
+	}		
 }
 
