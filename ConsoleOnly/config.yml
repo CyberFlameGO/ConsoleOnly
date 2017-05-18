@@ -6,27 +6,33 @@
 
 Prefix: '&8[&3ConsoleOnly&8]'
 
+#Don't put a command in both of the lists
 Settings:
   ConsoleOnly:
     Active: true
+    Effects:
+      sounds:
+        active: true
+        type: SLIME_ATTACK
     Message: '&cThis command can only be run by the console.'
     Commands:
       - op
       - deop
-      - plugins
       - pl
       - reload
+      - rl
       - ver
-      - version
       - minecraft:op
       - minecraft:deop
       - bukkit:pl
-      - bukkit:plugins
       - bukkit:ver
-      - bukkit:version
-
+      
   BlockedCommands:    
     Active: true
+    Effects:
+      sounds:
+        active: true
+        type: BAT_TAKEOFF
     Message: '&cSorry, you don''t have the permission ''consoleonly.bypass''.'
     Commands:
       - help
@@ -42,4 +48,4 @@ Messages:
   TooManyArgs: '&cToo many args.'
 
 ####DO NOT TOUCH###
-ConfigVersion: 1.0 
+ConfigVersion: 1.1
