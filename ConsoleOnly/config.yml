@@ -22,10 +22,7 @@ Settings:
       - reload
       - rl
       - ver
-      - minecraft:op
-      - minecraft:deop
-      - bukkit:pl
-      - bukkit:ver
+      - '?'
       
   BlockedCommands:    
     Active: true
@@ -36,11 +33,16 @@ Settings:
     Message: '&cSorry, you don''t have the permission ''consoleonly.bypass''.'
     Commands:
       - help
-      - minecraft:help
-      - bukkit:help
       - me
-      - minecraft:me
-  
+      
+  #BLOCK ALL COMMANDS WITH ':'
+  BlocksCmdsW/Colons:
+    active: true
+    Effects:
+      sounds:
+        active: true
+        type: BURP
+    message: '&cSorry, you can''t use the colon.'
 #Messages for /co info,reload:
 Messages:
   NoPermissions: '&cYou don''t have enough permissions to perform this command.'
@@ -48,4 +50,4 @@ Messages:
   TooManyArgs: '&cToo many args.'
 
 ####DO NOT TOUCH###
-ConfigVersion: 1.1
+ConfigVersion: 1.2
