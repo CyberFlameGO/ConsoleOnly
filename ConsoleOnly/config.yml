@@ -1,8 +1,8 @@
-##################################
-#       ConsoleOnly plugin       #
-#               by               #
-#          SpaicyGaming          #
-##################################
+##################################.
+#       ConsoleOnly plugin       #.
+#               by               #.
+#          SpaicyGaming          #.
+##################################.
 
 Prefix: '&8[&3ConsoleOnly&8]'
 
@@ -14,7 +14,7 @@ Settings:
       sounds:
         active: true
         type: SLIME_ATTACK
-    Message: '&cThis command can only be run by the console.'
+    Message: '&cThis command can only be executed by the console.'
     Commands:
       - op
       - deop
@@ -50,6 +50,6 @@ Messages:
   NoPermissions: '&cYou don''t have enough permissions to perform this command.'
   SuccesfullyAdded: '&cSuccesfully added command: &6&o%command%'
   
-####DO NOT TOUCH###
+### DO NOT TOUCH ##.
 ConfigVersion: 1.3
 UpdateChecker: true

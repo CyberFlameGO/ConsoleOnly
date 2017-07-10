@@ -1,6 +1,7 @@
 package me.spaicygaming.consoleonly;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -26,8 +27,8 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 	String sourcecodelink = "http://bit.ly/ConsoleOnlysource";
 	String prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Prefix")) + ChatColor.RESET + " ";
 	
-	List<String> consoleonly = getConfig().getStringList("Settings.ConsoleOnly.Commands");
-	List<String> blockedcmds = getConfig().getStringList("Settings.BlockedCommands.Commands");
+	List<String> consoleonly;
+	List<String> blockedcmds;
 	
 	public static Object[] updates;
 	
@@ -41,6 +42,7 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 	
 	public void onEnable() {
 		instance = this;
+		refreshLists();
 		Server server = getServer();
 		ConsoleCommandSender console = server.getConsoleSender();
 		
@@ -194,6 +196,7 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 					if (s instanceof Player){
 						if (s.hasPermission("consoleonly.reload")){
 							reloadConfig();
+							refreshLists();
 							s.sendMessage(prefix + "§7Config Reloaded.");
 							getLogger().info("Config Reloaded.");
 						}
@@ -218,52 +221,17 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 			/*
 			 * ARGS 2
 			 */
-			else if (args.length == 2){
-				
-				/*
-				String successAdded = prefix + ChatColor.translateAlternateColorCodes('&', getConfig().getString("Messages.SuccesfullyAdded").replaceAll("%command%", String.valueOf(args[1])));
-				
-				if (args[0].equalsIgnoreCase("addcmds")){
-					if (!s.hasPermission("consoleonly.addcmds")){
-						s.sendMessage(noperms);
-						return true;
-					}
-					//se il comando è già in lista
-					boolean alreadyexist = false;
-					
-					for (String input : consoleonly){
-						if (input.equalsIgnoreCase(args[1].replaceAll("_", " "))){
-							alreadyexist = true;
-							s.sendMessage(prefix + ChatColor.RED + "The command " + args[1] + "is already blocked.");
-							break;
-						}
-					}
-					
-					if (!alreadyexist){
-						consoleonly.add(args[1].toLowerCase());
-						getConfig().set("Settings.ConsoleOnly.Commands", consoleonly);
-						saveConfig();
-						reloadConfig();
-						s.sendMessage(successAdded);
-					}
-					
-				}
-				*/
+			else if (args.length == 2){ 
 				
 				/*
 				 * SHOW COMMANDS
 				 */
 				if (args[0].equalsIgnoreCase("list")){
-					if (!s.hasPermission("consoleonly.lists")){
+					if (!s.hasPermission("consoleonly.list")){
 						s.sendMessage(noperms);
 						return true;
 					}
-					s.sendMessage("");
-					s.sendMessage(ChatColor.RED + "   --=-=" + ChatColor.GOLD  + " Lists " + ChatColor.GRAY + "Help" + ChatColor.RED + " =-=--");
-					s.sendMessage(ChatColor.AQUA + "   /co list consoleonly" + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows ConsoleOnly list.");
-					s.sendMessage(ChatColor.AQUA + "   /co list blockedcmds" + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows BlockedCommands list.");
-					s.sendMessage(ChatColor.RED + "         --=-=-=-=-=-=--");
-					s.sendMessage("");
+					
 					//CONSOLEONLY
 					if (args[1].equalsIgnoreCase("consoleonly")){
 						displayCmds(s, "ConsoleOnly", consoleonly);
@@ -274,7 +242,7 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 					}
 					//else
 					else{
-						s.sendMessage(unkncmd);
+						printListHelp(s);
 					}
 				}
 				
@@ -286,7 +254,31 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 				}
 			}
 			
-			
+			/*
+			 * ARGS 3
+			 */
+			else if(args.length == 3){
+				if (args[0].equalsIgnoreCase("addcmd")){
+					if (!s.hasPermission("consoleonly.addcmds")){
+						s.sendMessage(noperms);
+						return true;
+					}
+					if (args[1].equalsIgnoreCase("consoleonly")){
+						if (alreadyExist(consoleonly, args[2], s)){
+							return true;
+						}
+
+						addCommand(s, args[2]);
+					}
+					else if (args[1].equalsIgnoreCase("blockedcommands")){
+						if (alreadyExist(blockedcmds, args[2], s)){
+							return true;
+						}
+
+						addCommand(s, args[2]);
+					}
+				}
+			}
 			/*
 			 * if args >
 			 */
@@ -299,7 +291,6 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 				}
 			}
 		}
-		
 		return false;
 	}
 	
@@ -307,7 +298,7 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 		s.sendMessage(ChatColor.RED + "  --= " + ChatColor.GOLD  + name + ChatColor.GRAY + " List" + ChatColor.RED + " =--");
 		int index = 1;
 		for (String cmd : list){
-			s.sendMessage(ChatColor.GRAY + " " + index + ")" + ChatColor.AQUA + " " + cmd);
+			s.sendMessage(ChatColor.GRAY + " " + index + "." + ChatColor.AQUA + " " + cmd);
 			index++;
 		}
 		s.sendMessage(ChatColor.RED + "      --=-=-=-=-=-=--");
@@ -337,6 +328,44 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 			sb.append("=");
 		}
 		return sb.toString();
+	}
+	
+	private void printListHelp(CommandSender s){
+		s.sendMessage("");
+		s.sendMessage(ChatColor.RED + "   --=-=" + ChatColor.GOLD  + " Lists " + ChatColor.GRAY + "Help" + ChatColor.RED + " =-=--");
+		s.sendMessage(ChatColor.AQUA + "   /co list consoleonly" + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows ConsoleOnly list.");
+		s.sendMessage(ChatColor.AQUA + "   /co list blockedcmds" + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows BlockedCommands list.");
+		s.sendMessage(ChatColor.RED + "         --=-=-=-=-=-=--");
+		s.sendMessage("");
+	}
+	
+	private boolean alreadyExist(List<String> list, String arg, CommandSender s){
+		for (String input : list){
+			if (input.equalsIgnoreCase(arg.replaceAll("_", " "))){
+				s.sendMessage(prefix + ChatColor.RED + "The command " + ChatColor.ITALIC + arg + ChatColor.RESET + ChatColor.RED + " is already blocked.");
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private void addCommand(CommandSender s, String command){
+		String successAdded = prefix + ChatColor.translateAlternateColorCodes('&', getConfig().getString("Messages.SuccesfullyAdded").replaceAll("%command%", String.valueOf(command)));
+		List<String> addlist = new ArrayList<String>();
+		
+		for (String k : getConfig().getStringList("Settings.ConsoleOnly.Commands")){
+			addlist.add(k);
+		}
+		addlist.add(command);
+		getConfig().set("Settings.ConsoleOnly.Commands", addlist);
+		saveConfig();
+		s.sendMessage(successAdded);
+		refreshLists();
+	}
+	
+	public void refreshLists(){
+		consoleonly = getConfig().getStringList("Settings.ConsoleOnly.Commands");
+		blockedcmds = getConfig().getStringList("Settings.BlockedCommands.Commands");
 	}
 	
 }
