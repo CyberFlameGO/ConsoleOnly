@@ -42,7 +42,7 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 	
 	public void onEnable() {
 		instance = this;
-		refreshLists();
+		
 		Server server = getServer();
 		ConsoleCommandSender console = server.getConsoleSender();
 		
@@ -61,7 +61,7 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 	        console.sendMessage("[ConsoleOnly] " + ChatColor.RED + "OUTDATED CONFIG FILE DETECTED, PLEASE DELETE THE OLD ONE!");
 	    }
 		saveDefaultConfig();
-		
+		refreshLists();
 		
 		//LOGS UPDATES
 		updates = UpdateChecker.getLastUpdate();
