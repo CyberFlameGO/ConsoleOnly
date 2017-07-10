@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class CmdsBlocker extends JavaPlugin implements Listener{
@@ -25,7 +26,21 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 	String sourcecodelink = "http://bit.ly/ConsoleOnlysource";
 	String prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Prefix")) + ChatColor.RESET + " ";
 	
+	List<String> consoleonly = getConfig().getStringList("Settings.ConsoleOnly.Commands");
+	List<String> blockedcmds = getConfig().getStringList("Settings.BlockedCommands.Commands");
+	
+	public static Object[] updates;
+	
+	public static CmdsBlocker instance;
+	
+	public static CmdsBlocker getInstance(){
+		return instance;
+	}
+	
+	Boolean checkupdates = getConfig().getBoolean("UpdateChecker");
+	
 	public void onEnable() {
+		instance = this;
 		Server server = getServer();
 		ConsoleCommandSender console = server.getConsoleSender();
 		
@@ -36,14 +51,33 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 		console.sendMessage(ChatColor.GOLD + " Project: " + ChatColor.RED + ChatColor.ITALIC +projectlink);
 	    console.sendMessage(ChatColor.GREEN + "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 		*/
-	    
+
 		getLogger().info("ConsoleOnly v" + ver + " has been enabled!");
 		
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
-		if (!getConfig().getString("ConfigVersion").equals("1.2")) {
+		if (!getConfig().getString("ConfigVersion").equals("1.3")) {
 	        console.sendMessage("[ConsoleOnly] " + ChatColor.RED + "OUTDATED CONFIG FILE DETECTED, PLEASE DELETE THE OLD ONE!");
 	    }
 		saveDefaultConfig();
+		
+		
+		//LOGS UPDATES
+		updates = UpdateChecker.getLastUpdate();
+		
+		if (checkupdates){
+			getLogger().info("Checking for updates...");
+			
+			if (updates.length == 2){
+				getLogger().info(Separatori(70));
+				getLogger().info("Update found! Download here: " + "https://www.spigotmc.org/resources/consoleonly.40873/");
+				getLogger().info("New version: " + updates[0]);
+				getLogger().info("What's new: " + updates[1]);
+				getLogger().info(Separatori(70));
+			} else {
+				getLogger().info("No new version available." );
+			}
+		}
+		
 	}
 	
 	public void onDisable() {
@@ -57,7 +91,7 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 	  String sounderror = "[ConsoleOnly] " + ChatColor.RED + "ConsoleOnly | entered sound does not exist.";
 	  
 	  	if (config.getBoolean("Settings.ConsoleOnly.Active")){
-	  		List<String> consoleonly = config.getStringList("Settings.ConsoleOnly.Commands");
+	  		//List<String> consoleonly = config.getStringList("Settings.ConsoleOnly.Commands");
 	  		for (String command : consoleonly) {
 	  			if ((e.getMessage().toLowerCase().startsWith("/" + command))) {
 	  				e.setCancelled(true);
@@ -76,7 +110,7 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 	  	}
 	  
 	  	if (config.getBoolean("Settings.BlockedCommands.Active")) {
-	  		List<String> blockedcmds = config.getStringList("Settings.BlockedCommands.Commands");
+	  		//List<String> blockedcmds = config.getStringList("Settings.BlockedCommands.Commands");
 	  		for (String command : blockedcmds) {
 	  			if (!p.hasPermission("consoleonly.bypass")) {
 	  				if (e.getMessage().toLowerCase().startsWith("/" + command)){
@@ -115,27 +149,56 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 	  	}
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args){
+	public boolean onCommand(CommandSender s, Command cmd, String alias, String[] args){
+		
+		String unkncmd = prefix + "Unknown command, use /consoleonly help";
+		String noperms = prefix + ChatColor.translateAlternateColorCodes('&', getConfig().getString("Messages.NoPermissions"));
+		
 		if ((alias.equalsIgnoreCase("consoleonly")) || (alias.equalsIgnoreCase("co"))){
 			if (args.length == 0){
-				sender.sendMessage("");
-				sender.sendMessage(ChatColor.RED + "   --=-=" + ChatColor.GOLD  + " ConsoleOnly " + ChatColor.GRAY + ver + ChatColor.RED + " =-=--");
-				sender.sendMessage(ChatColor.AQUA + "   /co info " + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows Info");
-				sender.sendMessage(ChatColor.AQUA + "   /co reload " + ChatColor.GREEN + "->" + ChatColor.GRAY + " Reloads the Config");
-				sender.sendMessage(ChatColor.RED + "         --=-=-=-=-=-=--");
-				sender.sendMessage("");
+				s.sendMessage(unkncmd);
 			}
 
-			if (args.length == 1) {
-				if (args[0].equalsIgnoreCase("reload")) {
-					if (sender instanceof Player){
-						if (sender.hasPermission("consoleonly.reload")){
+			else if (args.length == 1) {
+				/*
+				 * shows subcommands
+				 */
+				if (args[0].equalsIgnoreCase("help")){
+					s.sendMessage("");
+					s.sendMessage(ChatColor.RED + "   --=-=" + ChatColor.GOLD  + " ConsoleOnly " + ChatColor.GRAY + ver + ChatColor.RED + " =-=--");
+					s.sendMessage(ChatColor.AQUA + "   /co info " + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows Info");
+					s.sendMessage(ChatColor.AQUA + "   /co reload " + ChatColor.GREEN + "->" + ChatColor.GRAY + " Reloads the Config");
+					s.sendMessage(ChatColor.AQUA + "   /co list consoleonly" + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows ConsoleOnly list.");
+					s.sendMessage(ChatColor.AQUA + "   /co list blockedcmds" + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows BlockedCommands list.");
+					//s.sendMessage(ChatColor.AQUA + "   /co addcmd <cmd>" + ChatColor.GREEN + "->" + ChatColor.GRAY + " Add Commands");
+					s.sendMessage(ChatColor.RED + "         --=-=-=-=-=-=--");
+					s.sendMessage("");
+				}
+				
+				/*
+				 * shows info
+				 */
+				else if (args[0].equalsIgnoreCase("info")) {
+					s.sendMessage(ChatColor.DARK_GREEN + "     --=-=-=-=-=-=-=-=-=--");
+					s.sendMessage(ChatColor.GOLD + "          ConsoleOnly " + ChatColor.GRAY + "v" + ver);
+					s.sendMessage(ChatColor.RED + "    Project: " + ChatColor.ITALIC + projectlink);
+					s.sendMessage(ChatColor.RED + "    SourceCode: " + ChatColor.ITALIC + sourcecodelink);
+					s.sendMessage(ChatColor.DARK_GREEN + "       --=-=-=-=-=-=-=--");
+					s.sendMessage("");
+				}
+				
+				/*
+				 * reload config
+				 */
+				else if (args[0].equalsIgnoreCase("reload")) {
+					if (s instanceof Player){
+						if (s.hasPermission("consoleonly.reload")){
 							reloadConfig();
-							sender.sendMessage(prefix + "Â§7Config Reloaded.");
+							s.sendMessage(prefix + "§7Config Reloaded.");
 							getLogger().info("Config Reloaded.");
 						}
 						else {
-							sender.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', getConfig().getString("Messages.NoPermissions")));
+							s.sendMessage(noperms);
 						}
 					}
 					else {
@@ -143,35 +206,137 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 						getLogger().info("Config Reloaded.");
 					}
 				}
-				else if (args[0].equalsIgnoreCase("info")) {
-					sender.sendMessage(ChatColor.DARK_GREEN + "     --=-=-=-=-=-=-=-=-=--");
-					sender.sendMessage(ChatColor.GOLD + "          ConsoleOnly " + ChatColor.GRAY + "v" + ver);
-					sender.sendMessage(ChatColor.RED + "    Project: " + ChatColor.ITALIC + projectlink);
-					sender.sendMessage(ChatColor.RED + "    SourceCode: " + ChatColor.ITALIC + sourcecodelink);
-					sender.sendMessage(ChatColor.DARK_GREEN + "       --=-=-=-=-=-=-=--");
-					sender.sendMessage("");
-				}
+				
+				/*
+				 * else
+				 */
 				else{
-					if (sender instanceof Player){
-						sender.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', getConfig().getString("Messages.WrongCommand")));
-					}
-					else {
-						getLogger().info(getConfig().getString("Messages.WrongCommand"));
-					}
+					s.sendMessage(unkncmd);
 				}
 			}
 			
-		}
-		if (args.length > 1) {
-			if (sender instanceof Player) {
-				sender.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', getConfig().getString("Messages.TooManyArgs")));
+			/*
+			 * ARGS 2
+			 */
+			else if (args.length == 2){
+				
+				/*
+				String successAdded = prefix + ChatColor.translateAlternateColorCodes('&', getConfig().getString("Messages.SuccesfullyAdded").replaceAll("%command%", String.valueOf(args[1])));
+				
+				if (args[0].equalsIgnoreCase("addcmds")){
+					if (!s.hasPermission("consoleonly.addcmds")){
+						s.sendMessage(noperms);
+						return true;
+					}
+					//se il comando è già in lista
+					boolean alreadyexist = false;
+					
+					for (String input : consoleonly){
+						if (input.equalsIgnoreCase(args[1].replaceAll("_", " "))){
+							alreadyexist = true;
+							s.sendMessage(prefix + ChatColor.RED + "The command " + args[1] + "is already blocked.");
+							break;
+						}
+					}
+					
+					if (!alreadyexist){
+						consoleonly.add(args[1].toLowerCase());
+						getConfig().set("Settings.ConsoleOnly.Commands", consoleonly);
+						saveConfig();
+						reloadConfig();
+						s.sendMessage(successAdded);
+					}
+					
+				}
+				*/
+				
+				/*
+				 * SHOW COMMANDS
+				 */
+				if (args[0].equalsIgnoreCase("list")){
+					if (!s.hasPermission("consoleonly.lists")){
+						s.sendMessage(noperms);
+						return true;
+					}
+					s.sendMessage("");
+					s.sendMessage(ChatColor.RED + "   --=-=" + ChatColor.GOLD  + " Lists " + ChatColor.GRAY + "Help" + ChatColor.RED + " =-=--");
+					s.sendMessage(ChatColor.AQUA + "   /co list consoleonly" + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows ConsoleOnly list.");
+					s.sendMessage(ChatColor.AQUA + "   /co list blockedcmds" + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows BlockedCommands list.");
+					s.sendMessage(ChatColor.RED + "         --=-=-=-=-=-=--");
+					s.sendMessage("");
+					//CONSOLEONLY
+					if (args[1].equalsIgnoreCase("consoleonly")){
+						displayCmds(s, "ConsoleOnly", consoleonly);
+					}
+					//BLOCKED COMMANDS
+					else if(args[1].equalsIgnoreCase("blockedcmds")){
+						displayCmds(s, "BlockedCmds", blockedcmds);
+					}
+					//else
+					else{
+						s.sendMessage(unkncmd);
+					}
+				}
+				
+				/*
+				 * ELSE
+				 */
+				else {
+					s.sendMessage(unkncmd);
+				}
 			}
+			
+			
+			/*
+			 * if args >
+			 */
 			else {
-				getLogger().info(getConfig().getString("Messages.TooManyArgs"));
+				if (s instanceof Player) {
+					s.sendMessage(unkncmd);
+				}
+				else {
+					getLogger().info(getConfig().getString("Unknown command, use /consoleonly help"));
+				}
 			}
 		}
+		
 		return false;
 	}
+	
+	private void displayCmds(CommandSender s,String name, List<String> list){
+		s.sendMessage(ChatColor.RED + "  --= " + ChatColor.GOLD  + name + ChatColor.GRAY + " List" + ChatColor.RED + " =--");
+		int index = 1;
+		for (String cmd : list){
+			s.sendMessage(ChatColor.GRAY + " " + index + ")" + ChatColor.AQUA + " " + cmd);
+			index++;
+		}
+		s.sendMessage(ChatColor.RED + "      --=-=-=-=-=-=--");
+	}
+	
+	
+	//NOTIFICA AGGIORNAMENTO DISPONIBILE
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e){
+		Player p = e.getPlayer();
 		
+		if (checkupdates && (p.isOp() || p.hasPermission("*") || p.hasPermission("consoleonly.notify"))){
+			if(updates.length == 2){
+				p.sendMessage(ChatColor.GREEN + Separatori(31));
+				p.sendMessage("§6§l[§cConsoleOnly§6] New update available:");
+				p.sendMessage("§6Current version: §e" + ver);
+				p.sendMessage("§6New version: §e" + updates[0]);
+				p.sendMessage("§6What's new: §e" + updates[1]);
+				p.sendMessage(ChatColor.GREEN + Separatori(31));
+			}
+		}
+	}
+	
+	public static String Separatori(int value){
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < value; i++){
+			sb.append("=");
+		}
+		return sb.toString();
+	}
+	
 }
-

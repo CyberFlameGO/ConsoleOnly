@@ -23,6 +23,8 @@ Settings:
       - rl
       - ver
       - '?'
+      - about
+      - pl
       
   BlockedCommands:    
     Active: true
@@ -35,7 +37,7 @@ Settings:
       - help
       - me
       
-  #BLOCK ALL COMMANDS WITH ':'
+  #BLOCKS ALL COMMANDS WITH ':'
   BlocksCmdsW/Colons:
     active: true
     Effects:
@@ -43,11 +45,11 @@ Settings:
         active: true
         type: BURP
     message: '&cSorry, you can''t use the colon.'
-#Messages for /co info,reload:
+
 Messages:
   NoPermissions: '&cYou don''t have enough permissions to perform this command.'
-  WrongCommand: '&cThis command does not exist. Please use /co.'
-  TooManyArgs: '&cToo many args.'
-
+  SuccesfullyAdded: '&cSuccesfully added command: &6&o%command%'
+  
 ####DO NOT TOUCH###
-ConfigVersion: 1.2
+ConfigVersion: 1.3
+UpdateChecker: true
