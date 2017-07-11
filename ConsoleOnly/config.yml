@@ -18,7 +18,6 @@ Settings:
     Commands:
       - op
       - deop
-      - pl
       - reload
       - rl
       - ver
@@ -35,6 +34,7 @@ Settings:
     Message: '&cSorry, you don''t have the permission ''consoleonly.bypass''.'
     Commands:
       - help
+      - me
       - me
       
   #BLOCKS ALL COMMANDS WITH ':'

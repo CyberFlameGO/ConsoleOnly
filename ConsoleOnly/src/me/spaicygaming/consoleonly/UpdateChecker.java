@@ -9,7 +9,7 @@ import org.json.simple.JSONValue;
 
 public class UpdateChecker{	
 	
-	private static CmdsBlocker main = CmdsBlocker.getInstance();
+	private static ConsoleOnly main = ConsoleOnly.getInstance();
 	
 	final static String VERSION_URL = "https://api.spiget.org/v2/resources/40873/versions?size=" + Integer.MAX_VALUE + "&spiget__ua=SpigetDocs";
 	final static String DESCRIPTION_URL = "https://api.spiget.org/v2/resources/40873/updates?size=" + Integer.MAX_VALUE + "&spiget__ua=SpigetDocs";
