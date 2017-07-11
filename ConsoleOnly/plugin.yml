@@ -2,7 +2,7 @@ main: me.spaicygaming.consoleonly.CmdsBlocker
 author: SpaicyGaming
 name: ConsoleOnly
 version: 1.4
-website: http://bit.ly/ConsoleOnly/
+website: https://www.spigotmc.org/resources/consoleonly.40873/
 
 commands:
   consoleonly:

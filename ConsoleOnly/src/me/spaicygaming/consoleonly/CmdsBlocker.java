@@ -1,7 +1,6 @@
 package me.spaicygaming.consoleonly;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -209,6 +208,12 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 						getLogger().info("Config Reloaded.");
 					}
 				}
+				/*
+				 * list help
+				 */
+				else if (args[0].equalsIgnoreCase("list")){
+					printListHelp(s);
+				}
 				
 				/*
 				 * else
@@ -257,6 +262,7 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 			/*
 			 * ARGS 3
 			 */
+			/*
 			else if(args.length == 3){
 				if (args[0].equalsIgnoreCase("addcmd")){
 					if (!s.hasPermission("consoleonly.addcmds")){
@@ -279,6 +285,7 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 					}
 				}
 			}
+			*/
 			/*
 			 * if args >
 			 */
@@ -338,7 +345,7 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 		s.sendMessage(ChatColor.RED + "         --=-=-=-=-=-=--");
 		s.sendMessage("");
 	}
-	
+	/*
 	private boolean alreadyExist(List<String> list, String arg, CommandSender s){
 		for (String input : list){
 			if (input.equalsIgnoreCase(arg.replaceAll("_", " "))){
@@ -362,7 +369,7 @@ public class CmdsBlocker extends JavaPlugin implements Listener{
 		s.sendMessage(successAdded);
 		refreshLists();
 	}
-	
+	*/
 	public void refreshLists(){
 		consoleonly = getConfig().getStringList("Settings.ConsoleOnly.Commands");
 		blockedcmds = getConfig().getStringList("Settings.BlockedCommands.Commands");
