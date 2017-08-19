@@ -23,6 +23,11 @@ Settings:
       - ver
       - '?'
       - about
+      - bukkit
+      - icanasbukkit
+      - plugman
+      - bukkit
+      - spigot
       - pl
       
   BlockedCommands:    
@@ -35,7 +40,6 @@ Settings:
     Commands:
       - help
       - me
-      - me
       
   #BLOCKS ALL COMMANDS WITH ':'
   BlocksCmdsW/Colons:
@@ -45,7 +49,14 @@ Settings:
         active: true
         type: BURP
     message: '&cSorry, you can''t use the colon.'
-
+  #BLOCKS AUTOCOMPLETE
+  AntiTab:
+    active: true
+    Commands:
+      - pl
+      - '?'
+      - ver
+      - about
 Messages:
   NoPermissions: '&cYou don''t have enough permissions to perform this command.'
   SuccesfullyAdded: '&cSuccesfully added command: &6&o%command%'

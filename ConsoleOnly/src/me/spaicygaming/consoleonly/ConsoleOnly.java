@@ -9,6 +9,12 @@ import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.events.PacketAdapter;
+
 public class ConsoleOnly extends JavaPlugin{
 
 	private static ConsoleOnly instance;
@@ -20,11 +26,12 @@ public class ConsoleOnly extends JavaPlugin{
 	List<String> blockedcmds;
 	
 	public Object[] updates;
-	Boolean checkupdates = getConfig().getBoolean("UpdateChecker");
+	boolean checkupdates = getConfig().getBoolean("UpdateChecker");
 	
 	private String ver = getDescription().getVersion();
 	//CHANGE CONFIG VERSION (59)
 	String prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Prefix")) + ChatColor.RESET + " ";
+	boolean antitabActive = false;
 	
 	public void onEnable() {
 		instance = this;
@@ -45,13 +52,30 @@ public class ConsoleOnly extends JavaPlugin{
 		Bukkit.getServer().getPluginManager().registerEvents(new ConsoleOnlyListener(), this);
 		getCommand("consoleonly").setExecutor(new ConsoleOnlyCommands());
 		
-		if (!getConfig().getString("ConfigVersion").equals("1.3")) {
-	        console.sendMessage("[ConsoleOnly] " + ChatColor.RED + "OUTDATED CONFIG FILE DETECTED, PLEASE DELETE THE OLD ONE!");
-	    }
 		saveDefaultConfig();
 		refreshLists();
 		
-		//LOGS UPDATES
+		if (!getConfig().getString("ConfigVersion").equals("1.3")) {
+	        console.sendMessage("[ConsoleOnly] " + ChatColor.RED + "OUTDATED CONFIG FILE DETECTED, PLEASE DELETE THE OLD ONE!");
+	    }
+		
+		// ANTI TAB
+		antitabActive = getConfig().getBoolean("Settings.AntiTab.active");
+		
+		if (antitabActive && getServer().getPluginManager().getPlugin("ProtocolLib") == null) {
+			console.sendMessage("Plugin dependency ProtocolLib not found, disabling anti-tab protections!");
+			antitabActive = false;
+		}
+		
+		if (antitabActive){
+			ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+			new AntiTab(protocolManager);
+			getLogger().info("Anti-Tab enabled");
+		}else{
+			getLogger().info("Anti-Tab disabled");
+		}
+		
+		// LOGS UPDATES
 		updates = UpdateChecker.getLastUpdate();
 		
 		if (checkupdates){
