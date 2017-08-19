@@ -62,5 +62,5 @@ Messages:
   SuccesfullyAdded: '&cSuccesfully added command: &6&o%command%'
   
 # . DO NOT TOUCH . #
-ConfigVersion: 1.3
+ConfigVersion: 1.4
 UpdateChecker: true

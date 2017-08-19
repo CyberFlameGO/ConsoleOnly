@@ -55,7 +55,7 @@ public class ConsoleOnly extends JavaPlugin{
 		saveDefaultConfig();
 		refreshLists();
 		
-		if (!getConfig().getString("ConfigVersion").equals("1.3")) {
+		if (!getConfig().getString("ConfigVersion").equals("1.4")) {
 	        console.sendMessage("[ConsoleOnly] " + ChatColor.RED + "OUTDATED CONFIG FILE DETECTED, PLEASE DELETE THE OLD ONE!");
 	    }
 		
