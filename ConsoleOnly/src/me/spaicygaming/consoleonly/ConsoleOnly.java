@@ -9,11 +9,8 @@ import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
 
 public class ConsoleOnly extends JavaPlugin{
 
@@ -29,7 +26,7 @@ public class ConsoleOnly extends JavaPlugin{
 	boolean checkupdates = getConfig().getBoolean("UpdateChecker");
 	
 	private String ver = getDescription().getVersion();
-	//CHANGE CONFIG VERSION (59)
+	//CHANGE CONFIG VERSION (55)
 	String prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Prefix")) + ChatColor.RESET + " ";
 	boolean antitabActive = false;
 	

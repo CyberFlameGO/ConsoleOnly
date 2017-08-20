@@ -9,7 +9,6 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.reflect.FieldAccessException;
 
 public class AntiTab{
 
@@ -21,7 +20,10 @@ public class AntiTab{
 			public void onPacketReceiving(PacketEvent e){
 				
 				if (e.getPacketType() != PacketType.Play.Client.TAB_COMPLETE){
-					System.out.println("1");
+					return;
+				}
+				
+				if (e.getPlayer().hasPermission("consoleonly.antitab.bypass")){
 					return;
 				}
 				
