@@ -38,6 +38,7 @@ public class ConsoleOnlyCommands implements CommandExecutor{
 					s.sendMessage(ChatColor.AQUA + "   /co reload " + ChatColor.GREEN + "->" + ChatColor.GRAY + " Reloads the Config");
 					s.sendMessage(ChatColor.AQUA + "   /co list consoleonly" + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows ConsoleOnly list.");
 					s.sendMessage(ChatColor.AQUA + "   /co list blockedcmds" + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows BlockedCommands list.");
+					s.sendMessage(ChatColor.AQUA + "   /co list antitab" + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows Anti-TAB list.");
 					//s.sendMessage(ChatColor.AQUA + "   /co addcmd <cmd>" + ChatColor.GREEN + "->" + ChatColor.GRAY + " Add Commands");
 					s.sendMessage(ChatColor.RED + "         --=-=-=-=-=-=--");
 					s.sendMessage("");
@@ -104,13 +105,17 @@ public class ConsoleOnlyCommands implements CommandExecutor{
 						return true;
 					}
 					
-					//CONSOLEONLY
+					// CONSOLEONLY
 					if (args[1].equalsIgnoreCase("consoleonly")){
 						displayCmds(s, "ConsoleOnly", main.consoleonly);
 					}
-					//BLOCKED COMMANDS
+					// BLOCKED COMMANDS
 					else if(args[1].equalsIgnoreCase("blockedcmds")){
 						displayCmds(s, "BlockedCmds", main.blockedcmds);
+					}
+					// ANTI- TAB
+					else if (args[1].equalsIgnoreCase("antitab")){
+						displayCmds(s, "Anti-TAB", main.getConfig().getStringList("Settings.AntiTab.Commands"));
 					}
 					//else
 					else{
@@ -168,6 +173,7 @@ public class ConsoleOnlyCommands implements CommandExecutor{
 		s.sendMessage(ChatColor.RED + "   --=-=" + ChatColor.GOLD  + " Lists " + ChatColor.GRAY + "Help" + ChatColor.RED + " =-=--");
 		s.sendMessage(ChatColor.AQUA + "   /co list consoleonly" + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows ConsoleOnly list.");
 		s.sendMessage(ChatColor.AQUA + "   /co list blockedcmds" + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows BlockedCommands list.");
+		s.sendMessage(ChatColor.AQUA + "   /co list antitab" + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows Anti-TAB list.");
 		s.sendMessage(ChatColor.RED + "         --=-=-=-=-=-=--");
 		s.sendMessage("");
 	}
