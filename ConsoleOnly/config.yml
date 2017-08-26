@@ -57,10 +57,18 @@ Settings:
       - '?'
       - ver
       - about
+  WorldEditCrashFix:
+    Active: true
+    # 1 / is added by the plugin
+    Commands:
+    - /calc
+    - /eval
+    - /solve
+    Message: "&cI'm sorry, this server is protected :D"
 Messages:
   NoPermissions: '&cYou don''t have enough permissions to perform this command.'
   SuccesfullyAdded: '&cSuccesfully added command: &6&o%command%'
   
 # . DO NOT TOUCH . #
-ConfigVersion: 1.4
+ConfigVersion: 1.5
 UpdateChecker: true

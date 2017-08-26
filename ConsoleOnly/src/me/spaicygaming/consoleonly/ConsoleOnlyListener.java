@@ -20,6 +20,9 @@ public class ConsoleOnlyListener implements Listener{
 	  Configuration config = main.getConfig();
 	  String sounderror = "[ConsoleOnly] " + ChatColor.RED + "ConsoleOnly | entered sound does not exist.";
 	  
+	  	/*
+	  	 * Console Only
+	  	 */
 	  	if (config.getBoolean("Settings.ConsoleOnly.Active")){
 	  		//List<String> consoleonly = config.getStringList("Settings.ConsoleOnly.Commands");
 	  		for (String command : main.consoleonly) {
@@ -39,7 +42,9 @@ public class ConsoleOnlyListener implements Listener{
 	  			}
 	  		}
 	  	}
-	  
+	  	/*
+	  	 * Blocked Commands
+	  	 */
 	  	if (config.getBoolean("Settings.BlockedCommands.Active")) {
 	  		//List<String> blockedcmds = config.getStringList("Settings.BlockedCommands.Commands");
 	  		for (String command : main.blockedcmds) {
@@ -56,6 +61,21 @@ public class ConsoleOnlyListener implements Listener{
 	  							main.getServer().getConsoleSender().sendMessage(sounderror);
 	  						}
 		  				}
+	  					break;
+	  				}			  
+	  			}
+	  		}
+	  	}
+	  	
+	  	/*
+	  	 * World Edit Fix
+	  	 */
+	  	if (config.getBoolean("Settings.WorldEditCrashFix.Active")) {
+	  		for (String command : main.getConfig().getStringList("Settings.WorldEditCrashFix.Commands")) {
+	  			if (!p.hasPermission("consoleonly.wefix.bypass")) {
+	  				if (e.getMessage().toLowerCase().startsWith("/" + command)){
+	  					e.setCancelled(true);
+	  					p.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', config.getString("Settings.WorldEditCrashFix.Message")));
 	  					break;
 	  				}			  
 	  			}
