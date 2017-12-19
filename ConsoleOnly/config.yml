@@ -65,10 +65,13 @@ Settings:
     - /eval
     - /solve
     Message: "&cI'm sorry, this server is protected :D"
+    Broadcast:
+      active: true
+      message: "&6{player} tried to crash the server"
 Messages:
   NoPermissions: '&cYou don''t have enough permissions to perform this command.'
   SuccesfullyAdded: '&cSuccesfully added command: &6&o%command%'
   
 # . DO NOT TOUCH . #
-ConfigVersion: 1.5
+ConfigVersion: 1.6
 UpdateChecker: true

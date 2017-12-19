@@ -9,4 +9,4 @@ softdepend: [ProtocolLib]
 commands:
   consoleonly:
     description: Shows subcommands.
-    aliases: co
+    aliases: [co]

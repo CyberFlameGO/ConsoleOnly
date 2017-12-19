@@ -1,40 +1,25 @@
 package me.spaicygaming.consoleonly;
 
-
-import java.util.List;
-
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 
 public class ConsoleOnly extends JavaPlugin{
 
 	private static ConsoleOnly instance;
-	public static ConsoleOnly getInstance(){
-		return instance;
-	}
 	
-	List<String> consoleonly;
-	List<String> blockedcmds;
+	// Stuff
+	private UpdateChecker updateChecker;
+	private CommandsManager commandsManager;
 	
-	public Object[] updates;
-	boolean checkupdates = getConfig().getBoolean("UpdateChecker");
-	
+	private String prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Prefix")) + ChatColor.RESET + " ";
 	private String ver = getDescription().getVersion();
-	//CHANGE CONFIG VERSION (55)
-	String prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Prefix")) + ChatColor.RESET + " ";
-	boolean antitabActive = false;
 	
 	public void onEnable() {
 		instance = this;
-		
-		Server server = getServer();
-		ConsoleCommandSender console = server.getConsoleSender();
+		ConsoleCommandSender console = getServer().getConsoleSender();
 		
 		/*
 	    console.sendMessage(ChatColor.GREEN + "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
@@ -43,62 +28,50 @@ public class ConsoleOnly extends JavaPlugin{
 		console.sendMessage(ChatColor.GOLD + " Project: " + ChatColor.RED + ChatColor.ITALIC +projectlink);
 	    console.sendMessage(ChatColor.GREEN + "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 		*/
-
-		getLogger().info("ConsoleOnly v" + ver + " has been enabled!");
-		
-		Bukkit.getServer().getPluginManager().registerEvents(new ConsoleOnlyListener(), this);
-		getCommand("consoleonly").setExecutor(new ConsoleOnlyCommands());
 		
 		saveDefaultConfig();
-		refreshLists();
+		commandsManager = new CommandsManager();
+		updateChecker = new UpdateChecker();
 		
-		if (!getConfig().getString("ConfigVersion").equals("1.4")) {
+		getServer().getPluginManager().registerEvents(new ConsoleOnlyListener(), this);
+		getCommand("consoleonly").setExecutor(new ConsoleOnlyCommands());
+		
+		// Config Version
+		if (getConfig().getDouble("ConfigVersion") > 1.6) {
 	        console.sendMessage("[ConsoleOnly] " + ChatColor.RED + "OUTDATED CONFIG FILE DETECTED, PLEASE DELETE THE OLD ONE!");
 	    }
 		
 		// ANTI TAB
-		antitabActive = getConfig().getBoolean("Settings.AntiTab.active");
-		
-		if (antitabActive && getServer().getPluginManager().getPlugin("ProtocolLib") == null) {
+		boolean useAntitab = getConfig().getBoolean("Settings.AntiTab.active");
+		if (useAntitab && getServer().getPluginManager().getPlugin("ProtocolLib") == null) {
 			console.sendMessage("Plugin dependency ProtocolLib not found, disabling anti-tab protections!");
-			antitabActive = false;
-		}
-		
-		if (antitabActive){
-			ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-			new AntiTab(protocolManager);
+		} else{
+			new AntiTab(ProtocolLibrary.getProtocolManager());
 			getLogger().info("Anti-Tab enabled");
-		}else{
-			getLogger().info("Anti-Tab disabled");
 		}
 		
-		// LOGS UPDATES
-		updates = UpdateChecker.getLastUpdate();
+		getLogger().info("ConsoleOnly v" + ver + " has been enabled!");
 		
-		if (checkupdates){
-			getLogger().info("Checking for updates...");
+		// Update Checker
+		if (!checkForUpdates()){
+			return;
+		}
+		getLogger().info("Checking for updates...");
 			
-			if (updates.length == 2){
-				getLogger().info(Separatori(70));
-				getLogger().info("Update found! Download here: " + "https://www.spigotmc.org/resources/consoleonly.40873/");
-				getLogger().info("New version: " + updates[0]);
-				getLogger().info("What's new: " + updates[1]);
-				getLogger().info(Separatori(70));
-			} else {
-				getLogger().info("No new version available." );
-			}
+		if (updateChecker.availableUpdate()){
+			console.sendMessage(ChatColor.GREEN + Separatori(70));
+			console.sendMessage(ChatColor.AQUA + "Update found! Download here: " + "https://www.spigotmc.org/resources/consoleonly.40873/");
+			console.sendMessage(ChatColor.AQUA + "New version: " + updateChecker.getLatestVersion());
+			console.sendMessage(ChatColor.AQUA + "What's new: " + updateChecker.getUpdateTitle());
+			console.sendMessage(ChatColor.GREEN + Separatori(70));
+			return;
 		}
+		getLogger().info("No new version available." );
 		
 	}
 	
-	public void onDisable() {
-		getLogger().info("ConsoleOnly has been Disabled!");
-	}
-		
-	
-	public void refreshLists(){
-		consoleonly = getConfig().getStringList("Settings.ConsoleOnly.Commands");
-		blockedcmds = getConfig().getStringList("Settings.BlockedCommands.Commands");
+	public static ConsoleOnly getInstance(){
+		return instance;
 	}
 	
 	public String Separatori(int value){
@@ -108,40 +81,41 @@ public class ConsoleOnly extends JavaPlugin{
 		}
 		return sb.toString();
 	}
-	
-
-	/*
-	private boolean alreadyExist(List<String> list, String arg, CommandSender s){
-		for (String input : list){
-			if (input.equalsIgnoreCase(arg.replaceAll("_", " "))){
-				s.sendMessage(prefix + ChatColor.RED + "The command " + ChatColor.ITALIC + arg + ChatColor.RESET + ChatColor.RED + " is already blocked.");
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	private void addCommand(CommandSender s, String command){
-		String successAdded = prefix + ChatColor.translateAlternateColorCodes('&', getConfig().getString("Messages.SuccesfullyAdded").replaceAll("%command%", String.valueOf(command)));
-		List<String> addlist = new ArrayList<String>();
 		
-		for (String k : getConfig().getStringList("Settings.ConsoleOnly.Commands")){
-			addlist.add(k);
-		}
-		addlist.add(command);
-		getConfig().set("Settings.ConsoleOnly.Commands", addlist);
-		saveConfig();
-		s.sendMessage(successAdded);
-		refreshLists();
+	public CommandsManager getCommandsManager(){
+		return commandsManager;
 	}
-	*/
 	
+	/**
+	 * Return the UpdateChecker
+	 * @return
+	 */
+	public UpdateChecker getUpdateChecker(){
+		return updateChecker;
+	}
+	
+	/**
+	 * Check if the update checker is enabled in the config.yml
+	 * @return false -> don't check
+	 */
+	public boolean checkForUpdates(){
+		return getConfig().getBoolean("UpdateChecker");
+	}
+	
+	/**
+	 * Return the chat prefix
+	 * @return
+	 */
 	public String getPrefix(){
 		return this.prefix;
 	}
 	
+	/**
+	 * Return the current plugin version
+	 * @return
+	 */
 	public String getVer(){
 		return ver;
 	}
-	
+
 }
