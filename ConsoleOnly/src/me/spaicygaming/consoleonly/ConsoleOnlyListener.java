@@ -15,35 +15,21 @@ public class ConsoleOnlyListener implements Listener {
 	private CommandsManager cmdsManager = main.getCommandsManager();
 	
 	// Sounds name
-	private String colonSoundName = main.getConfig().getString("Settings.BlocksCmdsW/Colons.Effects.sounds.type");
 	private String consoleOnlySoundName = main.getConfig().getString("Settings.ConsoleOnly.Effects.sounds.type");
 	private String blockedCmdsSoundName = main.getConfig().getString("Settings.BlockedCommands.Effects.sounds.type");
+	private String colonSoundName = main.getConfig().getString("Settings.BlocksCmdsWColons.Effects.sounds.type");
 	
 	@EventHandler
 	public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent e) {
+		String message = e.getMessage();
 		Player p = e.getPlayer();
-
-		/*
-		 * BLOCK COMMANDS WITH :
-		 */
-			if (e.getMessage().contains(":")) {
-				if (main.getConfig().getBoolean("Settings.BlocksCmdsW/Colons.active")){
-					e.setCancelled(true);
-					p.sendMessage(c("Settings.BlocksCmdsW/Colons.message"));
-					if (!main.getConfig().getBoolean("Settings.BlocksCmdsW/Colons.Effects.sounds.active")) {
-						return;
-					}
-					playSoundEffect(p, colonSoundName);
-					return;
-				}
-			}
 		
 		/*
 		 * Console Only
 		 */
 		if (main.getConfig().getBoolean("Settings.ConsoleOnly.Active")) {
 			for (String command : cmdsManager.getConsoleOnlyCmds()) {
-				if (e.getMessage().toLowerCase().startsWith("/" + command)) {
+				if (message.toLowerCase().startsWith("/" + command)) {
 					e.setCancelled(true);
 					p.sendMessage(c("Settings.ConsoleOnly.Message"));
 
@@ -64,7 +50,7 @@ public class ConsoleOnlyListener implements Listener {
 				if (p.hasPermission("consoleonly.bypass")) {
 					break;
 				}
-				if (e.getMessage().toLowerCase().startsWith("/" + command)) {
+				if (message.toLowerCase().startsWith("/" + command)) {
 					e.setCancelled(true);
 					p.sendMessage(c("Settings.BlockedCommands.Message"));
 
@@ -85,7 +71,7 @@ public class ConsoleOnlyListener implements Listener {
 				if (p.hasPermission("consoleonly.wefix.bypass")) {
 					break;
 				}
-				if (e.getMessage().toLowerCase().startsWith("/" + command)) {
+				if (message.toLowerCase().startsWith("/" + command)) {
 					e.setCancelled(true);
 					
 					p.sendMessage(c("Settings.WorldEditCrashFix.Message"));
@@ -99,7 +85,28 @@ public class ConsoleOnlyListener implements Listener {
 				}
 			}
 		}
-
+		
+		
+		/*
+		 * BLOCK COMMANDS WITH :
+		 */
+		if (e.getMessage().contains(":")) {
+			if (main.getConfig().getBoolean("Settings.BlocksCmdsWColons.active")) {
+				// To allow ':' in WorldEdit commands (//)
+				if (message.startsWith("//") && main.getConfig().getBoolean("Settings.BlocksCmdsWColons.ignoreWorldEditCmds")) {
+					return;
+				}
+				
+				e.setCancelled(true);
+				p.sendMessage(c("Settings.BlocksCmdsWColons.message"));
+				if (!main.getConfig().getBoolean("Settings.BlocksCmdsWColons.Effects.sounds.active")) {
+					return;
+				}
+				playSoundEffect(p, colonSoundName);
+				return;
+			}
+		}
+		
 
 	}
 	

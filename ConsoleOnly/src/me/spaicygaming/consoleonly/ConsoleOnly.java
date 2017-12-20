@@ -37,11 +37,11 @@ public class ConsoleOnly extends JavaPlugin{
 		getCommand("consoleonly").setExecutor(new ConsoleOnlyCommands());
 		
 		// Config Version
-		if (getConfig().getDouble("ConfigVersion") > 1.6) {
+		if (getConfig().getDouble("ConfigVersion") < 1.6) {
 	        console.sendMessage("[ConsoleOnly] " + ChatColor.RED + "OUTDATED CONFIG FILE DETECTED, PLEASE DELETE THE OLD ONE!");
 	    }
 		
-		// ANTI TAB
+		// Anti-TAB
 		boolean useAntitab = getConfig().getBoolean("Settings.AntiTab.active");
 		if (useAntitab && getServer().getPluginManager().getPlugin("ProtocolLib") == null) {
 			console.sendMessage("Plugin dependency ProtocolLib not found, disabling anti-tab protections!");
@@ -61,7 +61,8 @@ public class ConsoleOnly extends JavaPlugin{
 		if (updateChecker.availableUpdate()){
 			console.sendMessage(ChatColor.GREEN + Separatori(70));
 			console.sendMessage(ChatColor.AQUA + "Update found! Download here: " + "https://www.spigotmc.org/resources/consoleonly.40873/");
-			console.sendMessage(ChatColor.AQUA + "New version: " + updateChecker.getLatestVersion());
+			console.sendMessage(ChatColor.AQUA + "Current version: " + ver);
+			console.sendMessage(ChatColor.AQUA + "Latest version: " + updateChecker.getLatestVersion());
 			console.sendMessage(ChatColor.AQUA + "What's new: " + updateChecker.getUpdateTitle());
 			console.sendMessage(ChatColor.GREEN + Separatori(70));
 			return;

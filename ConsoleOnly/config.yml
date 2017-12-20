@@ -42,8 +42,10 @@ Settings:
       - me
       
   #BLOCKS ALL COMMANDS WITH ':'
-  BlocksCmdsW/Colons:
+  BlocksCmdsWColons:
     active: true
+    # If activated, the plugin will allow ':' in all commands starting with '//' (WorldEdit's commands). It's useful to use blocks id in commands (//set 159:6) 
+    ignoreWorldEditCmds: true
     Effects:
       sounds:
         active: true
