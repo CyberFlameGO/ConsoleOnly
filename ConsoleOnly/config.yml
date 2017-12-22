@@ -4,10 +4,14 @@
 #          SpaicyGaming          #
 # . ########################## . #
 
-Prefix: '&8[&3ConsoleOnly&8]'
-
-#Don't put a command in both of the lists
+Prefix:
+  active: true
+  prefix: '&8[&3ConsoleOnly&8]'
+#
+# Main Settings
 Settings:
+  #
+  # Block commands for all players
   ConsoleOnly:
     Active: true
     Effects:
@@ -29,7 +33,8 @@ Settings:
       - bukkit
       - spigot
       - pl
-      
+  #
+  # Block commands for the players without the permission 'consoleonly.bypass'
   BlockedCommands:    
     Active: true
     Effects:
@@ -40,8 +45,13 @@ Settings:
     Commands:
       - help
       - me
-      
-  #BLOCKS ALL COMMANDS WITH ':'
+  #
+  # Doesn't block the commands below even if they start with a blocked command
+  WhitelistedCommands:
+    - plist
+    - playertime
+  #   
+  # Block all commands containing ':'
   BlocksCmdsWColons:
     active: true
     # If activated, the plugin will allow ':' in all commands starting with '//' (WorldEdit's commands). It's useful to use blocks id in commands (//set 159:6) 
@@ -51,7 +61,8 @@ Settings:
         active: true
         type: BURP
     message: '&cSorry, you can''t use the colon.'
-  #BLOCKS AUTOCOMPLETE
+  #
+  # Block tab completition in some commands
   AntiTab:
     active: true
     Commands:
@@ -59,9 +70,11 @@ Settings:
       - '?'
       - ver
       - about
+  #
+  # 
   WorldEditCrashFix:
     Active: true
-    # 1 / is added by the plugin
+    # one '/' is added by the plugin
     Commands:
     - /calc
     - /eval
@@ -70,10 +83,12 @@ Settings:
     Broadcast:
       active: true
       message: "&6{player} tried to crash the server"
+#
+# Chat Messages
 Messages:
   NoPermissions: '&cYou don''t have enough permissions to perform this command.'
   SuccesfullyAdded: '&cSuccesfully added command: &6&o%command%'
   
 # . DO NOT TOUCH . #
-ConfigVersion: 1.6
+ConfigVersion: 1.7
 UpdateChecker: true

@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-public class ConsoleOnlyListener implements Listener {
+public class ConsoleOnlyListeners implements Listener {
 
 	private ConsoleOnly main = ConsoleOnly.getInstance();
 	private UpdateChecker updateChecker = main.getUpdateChecker();
@@ -23,6 +23,15 @@ public class ConsoleOnlyListener implements Listener {
 	public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent e) {
 		String message = e.getMessage();
 		Player p = e.getPlayer();
+		
+		/*
+		 * Whitelisted Commands
+		 */
+		for (String whitelistedCmd : main.getConfig().getStringList("Settings.WhitelistedCommands")){
+			if (message.equalsIgnoreCase("/" + whitelistedCmd)){
+				return;
+			}
+		}
 		
 		/*
 		 * Console Only

@@ -3,7 +3,7 @@ website: https://www.spigotmc.org/resources/consoleonly.40873/
 
 author: SpaicyGaming
 name: ConsoleOnly
-version: 1.9
+version: 2.0
 softdepend: [ProtocolLib]
 
 commands:

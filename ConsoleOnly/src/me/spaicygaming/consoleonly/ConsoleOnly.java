@@ -14,7 +14,6 @@ public class ConsoleOnly extends JavaPlugin{
 	private UpdateChecker updateChecker;
 	private CommandsManager commandsManager;
 	
-	private String prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Prefix")) + ChatColor.RESET + " ";
 	private String ver = getDescription().getVersion();
 	
 	public void onEnable() {
@@ -33,12 +32,13 @@ public class ConsoleOnly extends JavaPlugin{
 		commandsManager = new CommandsManager();
 		updateChecker = new UpdateChecker();
 		
-		getServer().getPluginManager().registerEvents(new ConsoleOnlyListener(), this);
+		getServer().getPluginManager().registerEvents(new ConsoleOnlyListeners(), this);
 		getCommand("consoleonly").setExecutor(new ConsoleOnlyCommands());
 		
 		// Config Version
-		if (getConfig().getDouble("ConfigVersion") < 1.6) {
+		if (getConfig().getDouble("ConfigVersion") < 1.7) {
 	        console.sendMessage("[ConsoleOnly] " + ChatColor.RED + "OUTDATED CONFIG FILE DETECTED, PLEASE DELETE THE OLD ONE!");
+	        console.sendMessage("[ConsoleOnly] " + ChatColor.RED + "You can also update it manually. Updated config: https://github.com/SpaicyGaming/ConsoleOnly/blob/master/ConsoleOnly/config.yml");
 	    }
 		
 		// Anti-TAB
@@ -108,7 +108,10 @@ public class ConsoleOnly extends JavaPlugin{
 	 * @return
 	 */
 	public String getPrefix(){
-		return this.prefix;
+		if (getConfig().getBoolean("Prefix.active")){
+			return ChatColor.translateAlternateColorCodes('&', getConfig().getString("Prefix.prefix")) + ChatColor.RESET + " ";
+		}
+		return "";
 	}
 	
 	/**
