@@ -20,9 +20,9 @@ public class CommandsManager {
     public void initializeLists() {
         consoleOnlyCmds = main.getConfig().getStringList("Settings.ConsoleOnly.commands");
         blockedCmds = main.getConfig().getStringList("Settings.BlockedCommands.commands");
-        worldEditCmds = main.getConfig().getStringList("Settings.WorldEditCrashFix.Commands");
+        worldEditCmds = main.getConfig().getStringList("Settings.WorldEditCrashFix.commands");
 
-        antiTabCmds = main.getConfig().getStringList("Settings.WorldEditCrashFix.Commands").stream().map(cmd -> "/" + cmd).collect(Collectors.toList());
+        antiTabCmds = main.getConfig().getStringList("Settings.AntiTab.commands").stream().map(cmd -> "/" + cmd).collect(Collectors.toList());
     }
 
     public List<String> getConsoleOnlyCmds() {
@@ -37,7 +37,7 @@ public class CommandsManager {
         return worldEditCmds;
     }
 
-    public List<String> getAntiTabCmds() {
+    List<String> getAntiTabCmds() {
         return antiTabCmds;
     }
 }

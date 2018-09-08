@@ -20,7 +20,7 @@ Settings:
       # If you want to disable this feature, just put an empty string -> ''
       sound: SLIME_ATTACK
 
-    Message: '&cThis command can only be executed by the console.'
+    message: '&cThis command can only be executed by the console.'
     commands:
     - op
     - deop
@@ -42,7 +42,7 @@ Settings:
     effects:
       sound: BAT_TAKEOFF
 
-    Message: '&cSorry, you don''t have the permission ''consoleonly.bypass''.'
+    message: '&cSorry, you don''t have the permission ''consoleonly.bypass''.'
     commands:
     - help
     - me
@@ -68,20 +68,20 @@ Settings:
   WorldEditCrashFix:
     active: true
     # one '/' is added by the plugin
-    Commands:
+    commands:
     - /calc
     - /eval
     - /solve
-    Message: "&cI'm sorry, this server is protected :D"
-    Broadcast:
+    message: "&cI'm sorry, this server is protected :D"
+    broadcast:
       active: true
       message: "&6{player} tried to crash the server"
 #
 # Chat Messages
 Messages:
   unknownCommand: "&cUnknown command. Please, use /consoleonly help"
-  NoPermissions: '&cYou don''t have enough permissions to perform this command.'
-  SuccesfullyAdded: '&cSuccesfully added command: &6&o%command%'
+  noPermissions: '&cYou don''t have enough permissions to perform this command.'
+  succesfullyAdded: '&cSuccessfully added command: &6&o{command}'
 
 # . DO NOT TOUCH . #
 ConfigVersion: 1.7

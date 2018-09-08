@@ -1,5 +1,7 @@
-package io.github.spaicygaming.consoleonly;
+package io.github.spaicygaming.consoleonly.commands;
 
+import io.github.spaicygaming.consoleonly.ConsoleOnly;
+import io.github.spaicygaming.consoleonly.Permission;
 import io.github.spaicygaming.consoleonly.restrictions.CommandsManager;
 import io.github.spaicygaming.consoleonly.util.ChatUtil;
 import org.bukkit.ChatColor;
@@ -9,22 +11,19 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
-public class ConsoleOnlyCommands implements CommandExecutor {
+public class ConsoleOnlyCommandExecutor implements CommandExecutor {
 
     private ConsoleOnly main;
     private CommandsManager cmdsManager;
 
-    private String noPerms;
+    private String noPermissionsMsg, currentPluginVersion;
 
-    private String projectLink = "http://bit.ly/ConsoleOnly";
-    private String sourceCodeLink = "http://bit.ly/ConsoleOnlysource";
-    private String ver = main.getRunningVersion();
-
-    ConsoleOnlyCommands(ConsoleOnly main) {
+    public ConsoleOnlyCommandExecutor(ConsoleOnly main) {
         this.main = main;
         this.cmdsManager = main.getCommandsManager();
 
-        this.noPerms = ChatUtil.c("Messages.NoPermissions");
+        this.noPermissionsMsg = ChatUtil.c("Messages.noPermissions");
+        this.currentPluginVersion = main.getDescription().getVersion();
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
@@ -37,16 +36,16 @@ public class ConsoleOnlyCommands implements CommandExecutor {
             // Info
             else if (args[0].equalsIgnoreCase("info")) {
                 sender.sendMessage(ChatColor.DARK_GREEN + "     --=-=-=-=-=-=-=-=-=--");
-                sender.sendMessage(ChatColor.GOLD + "          ConsoleOnly " + ChatColor.GRAY + "v" + ver);
-                sender.sendMessage(ChatColor.RED + "    Project: " + ChatColor.ITALIC + projectLink);
-                sender.sendMessage(ChatColor.RED + "    SourceCode: " + ChatColor.ITALIC + sourceCodeLink);
+                sender.sendMessage(ChatColor.GOLD + "          ConsoleOnly " + ChatColor.GRAY + "v" + currentPluginVersion);
+                sender.sendMessage(ChatColor.RED + "    Project: " + ChatColor.ITALIC + "http://bit.ly/ConsoleOnly");
+                sender.sendMessage(ChatColor.RED + "    SourceCode: " + ChatColor.ITALIC + "http://bit.ly/ConsoleOnlysource");
                 sender.sendMessage(ChatColor.DARK_GREEN + "       --=-=-=-=-=-=-=--");
                 sender.sendMessage("");
             }
             // Reload
             else if (args[0].equalsIgnoreCase("reload")) {
-                if (!sender.hasPermission("consoleonly.reload")) {
-                    sender.sendMessage(noPerms);
+                if (!Permission.CMD_RELOAD.has(sender)) {
+                    sender.sendMessage(noPermissionsMsg);
                 }
                 main.reloadConfig();
                 sender.sendMessage(ChatUtil.getPrefix() + "§7Config Reloaded.");
@@ -66,8 +65,8 @@ public class ConsoleOnlyCommands implements CommandExecutor {
         else if (args.length == 2) {
             // List
             if (args[0].equalsIgnoreCase("list")) {
-                if (!sender.hasPermission("consoleonly.list")) {
-                    sender.sendMessage(noPerms);
+                if (!Permission.CMD_LIST.has(sender)) {
+                    sender.sendMessage(noPermissionsMsg);
                     return false;
                 }
 
@@ -104,7 +103,7 @@ public class ConsoleOnlyCommands implements CommandExecutor {
     // TODO move in the config.yml
     private void printHelpMenu(CommandSender sender) {
         sender.sendMessage("");
-        sender.sendMessage(ChatColor.RED + "   --=-=" + ChatColor.GOLD + " ConsoleOnly " + ChatColor.GRAY + ver + ChatColor.RED + " =-=--");
+        sender.sendMessage(ChatColor.RED + "   --=-=" + ChatColor.GOLD + " ConsoleOnly " + ChatColor.GRAY + currentPluginVersion + ChatColor.RED + " =-=--");
         sender.sendMessage(ChatColor.AQUA + "   /co info " + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows Info");
         sender.sendMessage(ChatColor.AQUA + "   /co reload " + ChatColor.GREEN + "->" + ChatColor.GRAY + " Reloads the Config");
         sender.sendMessage(ChatColor.AQUA + "   /co list consoleonly" + ChatColor.GREEN + "->" + ChatColor.GRAY + " Shows ConsoleOnly list.");

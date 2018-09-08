@@ -3,7 +3,7 @@ package io.github.spaicygaming.consoleonly.util;
 import io.github.spaicygaming.consoleonly.ConsoleOnly;
 import org.bukkit.ChatColor;
 
-public class ChatUtil {
+public final class ChatUtil {
 
     /**
      * Main class instance
@@ -31,7 +31,7 @@ public class ChatUtil {
      * @param str the String to color
      * @return the colored string
      */
-    public static String colorString(String str) {
+    private static String colorString(String str) {
         return ChatColor.translateAlternateColorCodes('&', str);
     }
 

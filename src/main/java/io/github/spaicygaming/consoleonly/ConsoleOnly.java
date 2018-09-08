@@ -1,6 +1,7 @@
 package io.github.spaicygaming.consoleonly;
 
 import com.comphenix.protocol.ProtocolLibrary;
+import io.github.spaicygaming.consoleonly.commands.ConsoleOnlyCommandExecutor;
 import io.github.spaicygaming.consoleonly.restrictions.AntiTab;
 import io.github.spaicygaming.consoleonly.restrictions.CommandsManager;
 import io.github.spaicygaming.consoleonly.restrictions.ConsoleOnlyListeners;
@@ -14,6 +15,7 @@ public class ConsoleOnly extends JavaPlugin {
 
     private static ConsoleOnly instance;
     private CommandsManager commandsManager;
+    private ConsoleOnlyListeners listeners;
 
     private String ver = getDescription().getVersion();
 
@@ -33,8 +35,9 @@ public class ConsoleOnly extends JavaPlugin {
         commandsManager = new CommandsManager(this);
 
         // Register listeners and commands
-        getServer().getPluginManager().registerEvents(new ConsoleOnlyListeners(this), this);
-        getCommand("consoleonly").setExecutor(new ConsoleOnlyCommands(this));
+        listeners = new ConsoleOnlyListeners(this);
+        getServer().getPluginManager().registerEvents(listeners, this);
+        getCommand("consoleonly").setExecutor(new ConsoleOnlyCommandExecutor(this));
 
         // Notify if using an outdated configuration file version
         if (getConfig().getDouble("ConfigVersion") < 1.7) {
@@ -90,13 +93,7 @@ public class ConsoleOnly extends JavaPlugin {
     public void reloadConfig() {
         super.reloadConfig();
         commandsManager.initializeLists();
-    }
-
-    /**
-     * @return the running plugin version
-     */
-    String getRunningVersion() {
-        return ver;
+        listeners.loadConfigValues();
     }
 
 }

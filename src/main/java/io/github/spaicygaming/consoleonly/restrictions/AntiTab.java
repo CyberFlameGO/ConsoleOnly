@@ -7,6 +7,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import io.github.spaicygaming.consoleonly.ConsoleOnly;
+import io.github.spaicygaming.consoleonly.Permission;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
@@ -17,7 +18,7 @@ public class AntiTab {
 
             @EventHandler(priority = EventPriority.HIGHEST)
             public void onPacketReceiving(PacketEvent event) {
-                if (event.getPacketType() != PacketType.Play.Client.TAB_COMPLETE || event.getPlayer().hasPermission("consoleonly.antitab.bypass")) {
+                if (event.getPacketType() != PacketType.Play.Client.TAB_COMPLETE || Permission.BYPASS_ANTITAB.has(event.getPlayer())) {
                     return;
                 }
 
