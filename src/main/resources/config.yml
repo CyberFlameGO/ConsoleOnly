@@ -13,13 +13,15 @@ Settings:
   #
   # Block commands for all players
   ConsoleOnly:
-    Active: true
-    Effects:
-      sounds:
-        active: true
-        type: SLIME_ATTACK
+    active: true
+
+    effects:
+      # Sound played when someone execute a command listed below
+      # If you want to disable this feature, just put an empty string -> ''
+      sound: SLIME_ATTACK
+
     Message: '&cThis command can only be executed by the console.'
-    Commands:
+    commands:
     - op
     - deop
     - reload
@@ -36,36 +38,27 @@ Settings:
   #
   # Block commands for the players without the permission 'consoleonly.bypass'
   BlockedCommands:
-    Active: true
-    Effects:
-      sounds:
-        active: true
-        type: BAT_TAKEOFF
+    active: true
+    effects:
+      sound: BAT_TAKEOFF
+
     Message: '&cSorry, you don''t have the permission ''consoleonly.bypass''.'
-    Commands:
+    commands:
     - help
     - me
   #
-  # Doesn't block the commands below even if they start with a blocked command
-  WhitelistedCommands:
-  - plist
-  - playertime
-  #   
   # Block all commands containing ':'
   BlocksCmdsWColons:
     active: true
-    # If activated, the plugin will allow ':' in all commands starting with '//' (WorldEdit's commands). It's useful to use blocks id in commands (//set 159:6) 
-    ignoreWorldEditCmds: true
-    Effects:
-      sounds:
-        active: true
-        type: BURP
+    effects:
+      sound: BURP
+
     message: '&cSorry, you can''t use the colon.'
   #
   # Block tab completition in some commands
   AntiTab:
     active: true
-    Commands:
+    commands:
     - pl
     - '?'
     - ver
@@ -73,7 +66,7 @@ Settings:
   #
   # 
   WorldEditCrashFix:
-    Active: true
+    active: true
     # one '/' is added by the plugin
     Commands:
     - /calc
@@ -86,6 +79,7 @@ Settings:
 #
 # Chat Messages
 Messages:
+  unknownCommand: "&cUnknown command. Please, use /consoleonly help"
   NoPermissions: '&cYou don''t have enough permissions to perform this command.'
   SuccesfullyAdded: '&cSuccesfully added command: &6&o%command%'
 

@@ -1,9 +1,9 @@
-main: me.spaicygaming.consoleonly.ConsoleOnly
+main: ${project.groupId}.${project.artifactId}.${project.name}
 website: https://www.spigotmc.org/resources/consoleonly.40873/
 
 author: SpaicyGaming
-name: ConsoleOnly
-version: 2.0
+name: ${project.name}
+version: ${project.name}
 softdepend: [ProtocolLib]
 
 commands:
