@@ -1,0 +1,12 @@
+main: me.spaicygaming.consoleonly.ConsoleOnly
+website: https://www.spigotmc.org/resources/consoleonly.40873/
+
+author: SpaicyGaming
+name: ConsoleOnly
+version: 2.0
+softdepend: [ProtocolLib]
+
+commands:
+  consoleonly:
+    description: Shows subcommands.
+    aliases: [co]

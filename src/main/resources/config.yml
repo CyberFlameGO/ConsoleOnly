@@ -1,0 +1,94 @@
+# . ########################## . #
+#       ConsoleOnly plugin       #
+#               by               #
+#          SpaicyGaming          #
+# . ########################## . #
+
+Prefix:
+  active: true
+  prefix: '&8[&3ConsoleOnly&8]'
+#
+# Main Settings
+Settings:
+  #
+  # Block commands for all players
+  ConsoleOnly:
+    Active: true
+    Effects:
+      sounds:
+        active: true
+        type: SLIME_ATTACK
+    Message: '&cThis command can only be executed by the console.'
+    Commands:
+    - op
+    - deop
+    - reload
+    - rl
+    - ver
+    - '?'
+    - about
+    - bukkit
+    - icanasbukkit
+    - plugman
+    - bukkit
+    - spigot
+    - pl
+  #
+  # Block commands for the players without the permission 'consoleonly.bypass'
+  BlockedCommands:
+    Active: true
+    Effects:
+      sounds:
+        active: true
+        type: BAT_TAKEOFF
+    Message: '&cSorry, you don''t have the permission ''consoleonly.bypass''.'
+    Commands:
+    - help
+    - me
+  #
+  # Doesn't block the commands below even if they start with a blocked command
+  WhitelistedCommands:
+  - plist
+  - playertime
+  #   
+  # Block all commands containing ':'
+  BlocksCmdsWColons:
+    active: true
+    # If activated, the plugin will allow ':' in all commands starting with '//' (WorldEdit's commands). It's useful to use blocks id in commands (//set 159:6) 
+    ignoreWorldEditCmds: true
+    Effects:
+      sounds:
+        active: true
+        type: BURP
+    message: '&cSorry, you can''t use the colon.'
+  #
+  # Block tab completition in some commands
+  AntiTab:
+    active: true
+    Commands:
+    - pl
+    - '?'
+    - ver
+    - about
+  #
+  # 
+  WorldEditCrashFix:
+    Active: true
+    # one '/' is added by the plugin
+    Commands:
+    - /calc
+    - /eval
+    - /solve
+    Message: "&cI'm sorry, this server is protected :D"
+    Broadcast:
+      active: true
+      message: "&6{player} tried to crash the server"
+#
+# Chat Messages
+Messages:
+  NoPermissions: '&cYou don''t have enough permissions to perform this command.'
+  SuccesfullyAdded: '&cSuccesfully added command: &6&o%command%'
+
+# . DO NOT TOUCH . #
+ConfigVersion: 1.7
+UpdateChecker: true
